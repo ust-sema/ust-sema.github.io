@@ -34,7 +34,7 @@ var html='\
 			var val = $("#servo1input").val();
 			if (prevVal == val) return;
 			
-			$.get("/cmd"?servo1="+val);
+			$.get("/cmd?servo1="+val);
 			prevVal = val;
 		}, 200);
 	});
