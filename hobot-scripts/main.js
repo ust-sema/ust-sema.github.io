@@ -17,24 +17,49 @@ var html='\
                 100\
             </div>\
         </div>\
+        <div class="row mt-3">\
+            <div class="col-9 mb-3">\
+                Трак 1\
+            </div>\
+        </div>\
+        <div class="row">\
+            <div class="col-6">\
+                <input type="range" class="form-range" min="0" max="255" id="track1input">\
+            </div>\
+            <div id="track1val" class="col-3">\
+                0\
+            </div>\
+        </div>\
     </div>';
 	
-
-	var roboCookie = 'Robot-Hobot-IP';
-	var prevVal=0;
+	var prevVal=0, prevTrack1=0; 
 	
 	$(function() {
-		$("body").append(html);
+        $("body").append(html);
+
+        $("#track1input").val(0);
 		
-		$("#servo1input").on("input", function() {
-			$("#servo1val").text($(this).val());
-		});
-		
-		setInterval(function(){
-			var val = $("#servo1input").val();
-			if (prevVal == val) return;
-			
-			$.get("/cmd?servo1="+val);
-			prevVal = val;
-		}, 200);
+        $("#track1input").on("input", function () {
+            track1($("#track1input").val());
+        });
+        $("#track1input").on("mouseup touchend touchcancel", function () {
+            $("#track1input").val(0);
+            track1(0);
+        });
+
+		setInterval(send, 200);
 	});
+
+function send() {
+    var val = $("#servo1input").val();
+    if (prevVal == val) return;
+
+    $("#servo1val").text(val);
+    $.get("/cmd?servo1=" + val);
+    prevVal = val;
+}
+
+function track1(val) {
+    $("#track1val").text(val);
+    $.get("/cmd?track1=" + val);
+}
