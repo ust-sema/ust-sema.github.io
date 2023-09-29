@@ -19,14 +19,14 @@ $(function () {
             $("#track1input").val(0);
             track1(0);
         });
+        $('#JoyScript').on('load', function () {
+           
+        });
 
-        while (typeof JoystickController === 'undefined') {
-            // waiting until script loaded
-        }
-
-        myStick = new JoystickController("stick", 64, 8);
-
-        setInterval(send, 100);
+        $.getScript(SourceUrlBase + 'joystick.js', function () {
+            myStick = new JoystickController("stick", 64, 8);
+            setInterval(send, 100);
+        });
 
     });
    
