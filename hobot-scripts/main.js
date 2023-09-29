@@ -20,6 +20,10 @@ $(function () {
             track1(0);
         });
 
+        while (typeof JoystickController === 'undefined') {
+            // waiting until script loaded
+        }
+
         myStick = new JoystickController("stick", 64, 8);
 
         setInterval(send, 100);
