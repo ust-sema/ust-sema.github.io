@@ -1,44 +1,17 @@
-var html='\
-    <div class="container text-center">\
-        <div class="input-group mb-3 mt-4">\
-            <span class="input-group-text" id="inputGroup-sizing-default">Адрес робота:</span>\
-            <input type="text" class="form-control" id="hobotIp" >\
-        </div>\
-        <div class="row">\
-            <div class="col-9 mb-3">\
-                Сервопривод 1\
-            </div>\
-        </div>\
-        <div class="row">\
-            <div class="col-6">\
-                <input type="range" class="form-range" min="0" max="180" id="servo1input">\
-            </div>\
-            <div id="servo1val" class="col-3">\
-                100\
-            </div>\
-        </div>\
-        <div class="row mt-3">\
-            <div class="col-9 mb-3">\
-                Трак 1\
-            </div>\
-        </div>\
-        <div class="row">\
-            <div class="col-6">\
-                <input type="range" class="form-range" min="0" max="255" id="track1input">\
-            </div>\
-            <div id="track1val" class="col-3">\
-                0\
-            </div>\
-        </div>\
-    </div>';
-	
-	var prevVal=0, prevTrack1=0; 
-	
-	$(function() {
-        $("body").append(html);
+var prevVal = 0, prevTrack1 = 0; 
+var myStick;
+
+var motorL = 0, prevL = 0;
+var motorR = 0, prevR = 0;
+
+$(function () {
+    $.get(SourceUrlBase + "main.html", function (data) {
+
+        data = data.replaceAll("@@SourceUrlBase_", SourceUrlBase);
+        $("body").append(data);
 
         $("#track1input").val(0);
-		
+
         $("#track1input").on("input", function () {
             track1($("#track1input").val());
         });
@@ -47,10 +20,25 @@ var html='\
             track1(0);
         });
 
-		setInterval(send, 200);
-	});
+        myStick = new JoystickController("stick", 64, 8);
+
+        setInterval(send, 100);
+
+    });
+   
+});
 
 function send() {
+    $("#hobotIp").val(JSON.stringify(myStick.value));
+    st = move();
+    $("#hobotIp").val($("#hobotIp").val() + ' ' + st);
+
+    if (motorL !== prevL || motorR !== prevR) {
+        $.get("/cmd?" + st);
+        prevL = motorL;
+        prevR = motorR;
+    }
+
     var val = $("#servo1input").val();
     if (prevVal == val) return;
 
@@ -62,4 +50,39 @@ function send() {
 function track1(val) {
     $("#track1val").text(val);
     $.get("/cmd?track1=" + val);
+}
+
+function move() {
+    x = myStick.value.x;
+    y = myStick.value.y;
+    ax = Math.abs(x);
+    ay = Math.abs(y);
+    motorL = ay;
+    motorR = ay;
+
+    if (x < 0) {
+        motorR = ay - ax;
+    } else {
+        motorL = ay - ax;
+    }
+
+    dirL = "dirL=" + (y < 0 ? "1" : "0") + "&";
+    dirR = "dirR=" + (y < 0 ? "1" : "0") + "&";
+
+    motorL = motorL < 0 ? 0 : motorL * 100;
+    motorR = motorR < 0 ? 0 : motorR * 100;
+    prc = 155 / 100;
+
+    motorL = Math.round(motorL * prc) + 100;
+    motorR = Math.round(motorR * prc) + 100;
+
+    motorL = motorL == 100 ? 0 : motorL;
+    motorR = motorR == 100 ? 0 : motorR;
+
+    $("#motorL").val(motorL);
+    $("#motorR").val(motorR);
+    $("#motorLval").text(motorL);
+    $("#motorRval").text(motorR);
+
+    return dirL + dirR + "motorL=" + motorL + "&motorR=" + motorR;
 }
