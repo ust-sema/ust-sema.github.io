@@ -4,6 +4,11 @@
     margin-bottom: 10px;
 }
 
+.btn:hover {
+    color: var(--bs-btn-color);
+    background-color: var(--bs-btn-bg);
+}
+
 .bi {
     width: 32px;
     height: 32px;

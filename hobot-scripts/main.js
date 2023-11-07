@@ -23,6 +23,15 @@ $(function () {
            
         });
 
+        $(".hbt-move-button").on("touchstart mousedown", function () {
+            $.get("/cmd?btn=" + $(this).attr("data-cmd"));
+        });
+
+        $(".hbt-move-button").on("mouseup touchend touchcancel", function () {
+            $.get("/cmd?btnUp=" + $(this).attr("data-cmd"));
+        });
+
+
         $.getScript(SourceUrlBase + 'joystick.js', function () {
             myStick = new JoystickController("stick", 64, 8);
             setInterval(send, 100);
