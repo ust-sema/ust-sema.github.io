@@ -23,11 +23,13 @@ $(function () {
            
         });
 
-        $(".hbt-move-button").on("touchstart mousedown", function () {
+        $(".hbt-move-button").on("touchstart", function (event) {
+            event.stopPropagation();
             $.get("/cmd?btn=" + $(this).attr("data-cmd"));
         });
 
-        $(".hbt-move-button").on("mouseup touchend touchcancel", function () {
+        $(".hbt-move-button").on("touchend touchcancel", function (event) {
+            event.stopPropagation();
             $.get("/cmd?btnUp=" + $(this).attr("data-cmd"));
         });
 
