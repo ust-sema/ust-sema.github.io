@@ -23,14 +23,12 @@ $(function () {
            
         });
 
-        $(".hbt-move-button").on("touchstart", function (event) {
-            event.stopPropagation();
-            $.get("/cmd?btn=" + $(this).attr("data-cmd"));
+        $(".hbt-command").on("touchstart", function (event) {
+            $.get("/cmd?core=" + $(this).attr("data-core") +"&command=" + $(this).attr("data-cmd")+"%201");
         });
 
-        $(".hbt-move-button").on("touchend touchcancel", function (event) {
-            event.stopPropagation();
-            $.get("/cmd?btnUp=" + $(this).attr("data-cmd"));
+        $(".hbt-command:not(.hbt-one-touch)").on("touchend touchcancel", function (event) {
+            $.get("/cmd?core=" + $(this).attr("data-core") + "&command=" + $(this).attr("data-cmd") + "%200");
         });
 
 
