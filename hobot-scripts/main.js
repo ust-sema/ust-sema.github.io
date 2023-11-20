@@ -10,14 +10,14 @@ $(function () {
         data = data.replaceAll("@@SourceUrlBase_", SourceUrlBase);
         $("body").append(data);
 
-        $("#track1input").val(0);
+        $("#baseTurn").val(255);
 
-        $("#track1input").on("input", function () {
-            track1($("#track1input").val());
+        $("#baseTurn").on("input", function () {
+            baseTurn($("#baseTurn").val());
         });
-        $("#track1input").on("mouseup touchend touchcancel", function () {
-            $("#track1input").val(0);
-            track1(0);
+        $("#baseTurn").on("mouseup touchend touchcancel", function () {
+            $("#baseTurn").val(255);
+            baseTurn(255);
         });
         $('#JoyScript').on('load', function () {
            
@@ -60,9 +60,16 @@ function send() {
     prevVal = val;
 }
 
-function track1(val) {
-    $("#track1val").text(val);
-    $.get("/cmd?track1=" + val);
+function baseTurn(val) {
+    var b = val - 255;
+
+    $("#baseTurnValue").text(b);
+    if (b > 0) {
+        $.get("/cmd?core=7&command=base-right%20"+b);
+    } else {
+        $.get("/cmd?core=7&command=base-left%20" + Math.abs(b));
+    }
+    //$.get("/cmd?track1=" + val);
 }
 
 function move() {
