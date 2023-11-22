@@ -31,6 +31,10 @@ $(function () {
             $.get("/cmd?core=" + $(this).attr("data-core") + "&command=" + $(this).attr("data-cmd") + "%200");
         });
 
+        $("#go-home").on("touchstart", function (event) {
+            $.get("/cmd?core=5&command=home");
+            $.get("/cmd?core=7&command=home");
+        });
 
         $.getScript(SourceUrlBase + 'joystick.js', function () {
             myStick = new JoystickController("stick", 64, 8);
