@@ -94,7 +94,7 @@ function move() {
 
     mt = 45; // parseInt($("#MotorThreshold").val());
 
-    slope = 120 - mt;  //(output_end - output_start) / (input_end - input_start)
+    slope = 120 - mt; 
 
     motorL = motorL < 0 ? 0 : Math.round(motorL * slope) + mt;
     motorR = motorR < 0 ? 0 : Math.round(motorR * slope) + mt;
@@ -112,5 +112,6 @@ function move() {
 }
 
 function getEx(url) {
-    $.get($("#MCUAddress").val() + url);
+    la = $("#MCUAddress").val(); 
+    $.get(la ? la : '' + url);
 }
