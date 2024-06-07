@@ -10,7 +10,7 @@ $(function () {
         data = data.replaceAll("@@SourceUrlBase_", SourceUrlBase);
         $("body").append(data);
 
-        getEx("/cmd?freq=30");
+        getEx("/cmd?freq=40");
 
         $(".hbt-command").on("touchstart", function (event) {
             getEx("/cmd?core=" + $(this).attr("data-core") +"&command=" + $(this).attr("data-cmd")+"%201");
@@ -22,7 +22,7 @@ $(function () {
 
         $("#go-home").on("touchstart", function (event) {
             getEx("/cmd?core=5&command=home");
-            getEx("/cmd?core=7&command=home");
+            setTimeout(function () { getEx("/cmd?core=7&command=home"); }, 700);
         });
 
         $.getScript(SourceUrlBase + 'joystick.js', function () {
@@ -53,7 +53,7 @@ function move() {
     dirL = "dirL=" + (motorL < 0 ? "1" : "0") + "&";
     dirR = "dirR=" + (motorR < 0 ? "1" : "0") + "&";
 
-    mt = 35;
+    mt = 20;
     slope = 100 - mt;
 
     motorL = Math.abs(Math.round(motorL * slope)) + mt;
